@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FINFILT</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&display=swap" />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="brand">
+      <div class="bicon">
+        <svg viewBox="0 0 24 24"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+      </div>
+      <div>
+        <div class="bname">FINFILT</div>
+        <div class="bsub">AUTONOMOUS FRAUD DETECTION · NIGERIA · REAL-TIME</div>
+      </div>
+    </div>
+    <div class="topbar-r">
+      <span class="pill online" id="status-pill">AGENT ONLINE</span>
+      <div class="dot" id="live-dot"></div>
+    </div>
+  </div>
+
+  <!-- CONTROL BAR -->
+  <div class="ctrl-row">
+    <button class="cbtn pause-btn" id="tog-btn" onclick="Controls.toggle()">
+      <i class="ti ti-player-pause" style="font-size:14px"></i>
+      <span id="tog-label">PAUSE</span>
+    </button>
+    <button class="cbtn clear-btn" onclick="Controls.clear()">
+      <i class="ti ti-refresh" style="font-size:14px"></i>
+      CLEAR
+    </button>
+    <div class="spd-wrap">
+      <span class="spd-lbl">SPEED</span>
+      <button class="spd-btn"        onclick="Controls.setSpeed(3000, this)">SLOW</button>
+      <button class="spd-btn active" onclick="Controls.setSpeed(2000, this)">NORMAL</button>
+      <button class="spd-btn"        onclick="Controls.setSpeed(1000, this)">FAST</button>
+    </div>
+    <div class="ctrl-stats">
+      <span class="cstat">Safe  <span class="s" id="pct-s">0%</span></span>
+      <span class="cstat">Susp  <span class="w" id="pct-w">0%</span></span>
+      <span class="cstat">Fraud <span class="f" id="pct-f">0%</span></span>
+      <span class="cstat" id="lat-inline" style="color:var(--blue)">— ms</span>
+    </div>
+  </div>
+
+  <!-- KPI STRIP -->
+  <div class="kpis">
+    <div class="kpi"><div class="kpi-l">PROCESSED</div><div class="kpi-v n" id="k0">0</div><div class="kpi-u">transactions</div></div>
+    <div class="kpi"><div class="kpi-l">SAFE</div><div class="kpi-v s" id="k1">0</div><div class="kpi-u">allowed</div></div>
+    <div class="kpi"><div class="kpi-l">SUSPICIOUS</div><div class="kpi-v w" id="k2">0</div><div class="kpi-u">flagged</div></div>
+    <div class="kpi"><div class="kpi-l">FRAUD</div><div class="kpi-v f" id="k3">0</div><div class="kpi-u">blocked</div></div>
+  </div>
+
+  <!-- MAIN BODY: THREE COLUMNS -->
+  <div class="body">
+
+    <!-- LEFT: Risk Engine -->
+    <div class="col">
+      <div class="col-hdr">
+        <span><span class="hdot" style="background:var(--blue)"></span>RISK ENGINE</span>
+        <span id="smini" style="color:var(--t3)">—/100</span>
+      </div>
+      <div class="score-block">
+        <div>
+          <div class="snum" id="snum">—</div>
+          <div class="slbl" id="slbl" style="color:var(--t3)">AWAITING TX</div>
+          <div class="sring"><div class="sring-f" id="sbar" style="width:0%"></div></div>
+        </div>
+        <div class="factors">
+          <div class="fr"><span class="fn">New account</span>    <div class="fb"><div class="ff" id="fb0" style="width:0%;background:var(--fraud)"></div></div><span class="fp" id="fp0">+0</span></div>
+          <div class="fr"><span class="fn">High amount</span>    <div class="fb"><div class="ff" id="fb1" style="width:0%;background:var(--warn)"></div></div> <span class="fp" id="fp1">+0</span></div>
+          <div class="fr"><span class="fn">Rapid xfer</span>     <div class="fb"><div class="ff" id="fb2" style="width:0%;background:var(--warn)"></div></div> <span class="fp" id="fp2">+0</span></div>
+          <div class="fr"><span class="fn">Night activity</span> <div class="fb"><div class="ff" id="fb3" style="width:0%;background:var(--blue)"></div></div> <span class="fp" id="fp3">+0</span></div>
+          <div class="fr"><span class="fn">Failed attempts</span><div class="fb"><div class="ff" id="fb4" style="width:0%;background:var(--fraud)"></div></div><span class="fp" id="fp4">+0</span></div>
+        </div>
+      </div>
+      <div class="thrs">
+        <div class="thr"><div class="tdot" style="background:var(--safe)"></div> <span class="tl">0–30  SAFE</span>       <span class="ta">ALLOW</span></div>
+        <div class="thr"><div class="tdot" style="background:var(--warn)"></div> <span class="tl">31–70 SUSPICIOUS</span> <span class="ta">FLAG</span></div>
+        <div class="thr"><div class="tdot" style="background:var(--fraud)"></div><span class="tl">71–100 FRAUD</span>     <span class="ta">BLOCK</span></div>
+      </div>
+    </div>
+
+    <!-- CENTRE: Live transaction stream -->
+    <div class="col" style="flex:1">
+      <div class="col-hdr">
+        <span><span class="hdot" style="background:var(--safe)"></span>LIVE TRANSACTION STREAM</span>
+        <span id="txcount" style="color:var(--t3)">TX #0</span>
+      </div>
+      <div class="chart-wrap">
+        <canvas id="risk-chart" role="img" aria-label="Risk score history">Risk score over time</canvas>
+      </div>
+      <div class="tx-feed" id="tx-feed"></div>
+    </div>
+
+    <!-- RIGHT: Decision engine + alerts -->
+    <div class="col">
+      <div class="col-hdr"><span><span class="hdot" style="background:var(--fraud)"></span>DECISION ENGINE</span></div>
+      <div class="verdict">
+        <div class="vl">CURRENT VERDICT</div>
+        <div class="vbox SAFE" id="vbox">INITIALIZING...</div>
+      </div>
+      <div class="agrid">
+        <div class="ac"><div class="acl">PERCEPTION</div> <div class="acv" id="ag0">—</div></div>
+        <div class="ac"><div class="acl">REASONING</div>  <div class="acv" id="ag1">—</div></div>
+        <div class="ac"><div class="acl">DECISION</div>   <div class="acv" id="ag2">—</div></div>
+        <div class="ac"><div class="acl">ACTION</div>     <div class="acv" id="ag3">—</div></div>
+      </div>
+      <div class="col-hdr">
+        <span><span class="hdot" style="background:var(--warn)"></span>ALERTS</span>
+        <span id="alcnt" style="color:var(--t3)">0 events</span>
+      </div>
+      <div class="alf" id="alert-feed"></div>
+    </div>
+
+  </div>
+
+  <!-- LATENCY BAR -->
+  <div class="latbar">
+    <span class="li">RISK CALC: <span class="lv" id="l1">—</span></span>
+    <span class="li">UI UPDATE: <span class="lv" id="l2">—</span></span>
+    <span class="li">FULL LOOP: <span class="lv" id="l3">—</span></span>
+    <span class="li" style="margin-left:auto">THROUGHPUT: <span class="lv" id="l4">—</span> tx/min</span>
+  </div>
+
+  <!-- SCRIPTS: load order matters -->
+  <script src="js/engine.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/controls.js"></script>
+  <script src="js/inject.js"></script>
+
+</body>
+</html>
