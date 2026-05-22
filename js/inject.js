@@ -1,5 +1,5 @@
 // ============================================================
-//  inject.js  —  JUDGE INJECTION CONSOLE  (v1)
+//  inject.js  —  INJECTION CONSOLE  (v1)
 //
 //  Allows judges / evaluators to craft synthetic transactions
 //  and inject them directly into the live engine + UI pipeline.
@@ -287,7 +287,7 @@ function mountInjectionPanel() {
   <!-- PANEL BODY -->
   <div id="inj-body" class="inj-body" style="display:none">
     <div class="inj-header">
-      <span class="inj-title">⚗ JUDGE INJECTION CONSOLE</span>
+      <span class="inj-title">⚗ INJECTION CONSOLE</span>
       <button class="inj-close" onclick="toggleInjPanel()">✕</button>
     </div>
 
