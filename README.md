@@ -140,16 +140,6 @@ finfilt-agent/
 
 ---
 
-## Deployment (Free)
-
-## 1 — GitHub Pages (Recommended)
-1. Push this repo to GitHub
-2. Go to **Settings → Pages**
-3. Set source to `main` branch, `/ (root)`
-4. Your live URL: `https://PeaceJohn20.github.io/finfilt-agent`
-
----
-
 ## Customisation
 
 **Change risk point weights:**
